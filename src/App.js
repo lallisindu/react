@@ -19,7 +19,7 @@ const expenses = [
   // Add more expenses
 ];
 
-function App() {
+const App=() =>{
   return (
     <div>
       <h1>Lets start</h1>
@@ -31,7 +31,15 @@ function App() {
           date={expense.date}
           location={expense.location}
         />
+        
       ))}
+      <ExpenseDate date={props.date} />
+      <ExpenseDetails
+        title={expenses.title}
+        amount={expenses.amount}
+        location={expenses.location}
+      />
+      
     </div>
   );
 }
