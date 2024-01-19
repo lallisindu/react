@@ -1,5 +1,7 @@
 import React from 'react';
-import ExpenciveItem from './components/ExItem.js';
+import ExpensiveItem from './components/ExItem.js';
+import ExpenseDate from './components/ExpenseDate'; // Import ExpenseDate component
+import ExpenseDetails from './components/ExpenseDetails'; // Import ExpenseDetails component
 
 const expenses = [
   {
@@ -19,29 +21,21 @@ const expenses = [
   // Add more expenses
 ];
 
-const App=() =>{
+const App = () => {
   return (
     <div>
       <h1>Lets start</h1>
       {expenses.map((expense) => (
-        <ExpenciveItem
+        <ExpensiveItem
           key={expense.id}
           title={expense.title}
           amount={expense.amount}
           date={expense.date}
           location={expense.location}
         />
-        
       ))}
-      <ExpenseDate date={props.date} />
-      <ExpenseDetails
-        title={expenses.title}
-        amount={expenses.amount}
-        location={expenses.location}
-      />
-      
     </div>
   );
-}
+};
 
 export default App;
