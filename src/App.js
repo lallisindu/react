@@ -23,9 +23,12 @@ const App= () => {
     Date:new Date(2024,1,15),
 },
   ];
-  
+  const addExpenseHandler = expense => {
+    console.log('In App.js');
+    console.log(expense);
+  };
   return (
-    <div><h1><NewExpense></NewExpense></h1>
+    <div><NewExpense onAddExpense={addExpenseHandler} />
     {expenses.map((expense, index) => (
         <ExpenseItem
           //key={index} // Ensure each item has a unique key
