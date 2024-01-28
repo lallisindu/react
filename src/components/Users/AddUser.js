@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 import ErrorModal from '../UI/ErrorModal';
+import Wrapper from '../Helpers/Wrapper';
 import classes from './AddUser.module.css';
 
 const AddUser = (props) => {
   const [enteredUsername, setEnteredUsername] = useState('');
   const [enteredAge, setEnteredAge] = useState('');
+  const [enteredCollegeName, setEnteredCollegeName] = useState('');
   const [error, setError] = useState();
 
   const addUserHandler = (event) => {
@@ -26,9 +28,10 @@ const AddUser = (props) => {
       });
       return;
     }
-    props.onAddUser(enteredUsername, enteredAge);
+    props.onAddUser(enteredUsername, enteredAge,enteredCollegeName);
     setEnteredUsername('');
     setEnteredAge('');
+    setEnteredCollegeName('');
   };
 
   const usernameChangeHandler = (event) => {
@@ -38,13 +41,16 @@ const AddUser = (props) => {
   const ageChangeHandler = (event) => {
     setEnteredAge(event.target.value);
   };
+  const collegeNameChangeHandler =(event) => {
+    setEnteredCollegeName(event.target.value);
+  }
 
   const errorHandler = () => {
     setError(null);
   };
 
   return (
-    <div>
+    <Wrapper>
       {error && (
         <ErrorModal
           title={error.title}
@@ -61,17 +67,25 @@ const AddUser = (props) => {
             value={enteredUsername}
             onChange={usernameChangeHandler}
           />
-          <label htmlFor="age">Age (Years)</label>
+          <label htmlFor="age">age</label>
           <input
             id="age"
             type="number"
             value={enteredAge}
             onChange={ageChangeHandler}
           />
+          
+          <label htmlFor="collegename">College Name</label>
+          <input
+            id="collegename"
+            type="text"
+            value={enteredCollegeName}
+            onChange={collegeNameChangeHandler}
+          />
           <Button type="submit">Add User</Button>
         </form>
       </Card>
-    </div>
+    </Wrapper>
   );
 };
 
