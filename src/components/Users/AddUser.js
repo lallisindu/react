@@ -81,6 +81,7 @@ const AddUser = (props) => {
             type="text"
             value={enteredCollegeName}
             onChange={collegeNameChangeHandler}
+            required
           />
           <Button type="submit">Add User</Button>
         </form>
