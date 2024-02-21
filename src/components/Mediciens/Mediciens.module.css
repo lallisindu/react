@@ -1,0 +1,6 @@
+.meals {
+    max-width: 60rem;
+    width: 40%;
+    margin: 1rem auto;
+    animation: meals-appear 1s ease-out forwards;
+  }
