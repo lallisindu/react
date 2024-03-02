@@ -2,7 +2,7 @@ import React from 'react';
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import styles from './Title.module.css'; // Import CSS module
 
-const Header = () => {
+const Header = ({showCart}) => {
   return (
     <div>
       <Navbar bg="dark" variant="dark" expand="lg" className="py-0" style={{ borderBottom: '1px solid white' }}>
@@ -16,7 +16,7 @@ const Header = () => {
               {/* Add more navigation links as needed */}
             </Nav>
             <Nav>
-              <Button variant="outline-light">Cart</Button>
+              <Button  onClick={showCart}  variant="outline-light">Cart</Button>
             </Nav>
           </Navbar.Collapse>
         </Container>
