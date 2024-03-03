@@ -1,0 +1,64 @@
+/* CartStyles.css */
+.cart-modal {
+  
+  top: 20px;
+  right: 20px;
+  max-width: 400px; /* Adjust the width as needed */
+}
+
+.cart-item-image {
+  width: 100px; /* Adjust the image size as needed */
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+  
+  
+  
+
+}
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px; /* Add margin-bottom for space */
+}
+
+.header-item  {
+  flex-basis: 40%;
+   /* Adjust the width of each header */
+}
+.header-price{
+  flex-basis: 10%;
+}
+.header-quantity{
+  flex-basis: 35%;
+}
+/* CSS file */
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.cart-item-details {
+  display: flex;
+  align-items: center;
+}
+
+.cart-item-details > div {
+  margin-left: 10px;
+}
+
+.cart-total {
+  margin-top: 10px;
+}
+.visually-hidden {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 1;
+}

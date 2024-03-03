@@ -1,8 +1,10 @@
-import React from 'react';
-import { Navbar, Container, Nav, Button } from 'react-bootstrap';
-import styles from './Title.module.css'; // Import CSS module
+import React, { useContext }  from 'react';
+import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import CartButton from './CartButton'; 
+import { CartContext } from './CartContext';// Import CartButton
 
-const Header = ({showCart}) => {
+function Header({ onCartClick }) {
+  const { cartItems } = useContext(CartContext); // Receive onCartClick prop
   return (
     <div>
       <Navbar bg="dark" variant="dark" expand="lg" className="py-0" style={{ borderBottom: '1px solid white' }}>
@@ -16,8 +18,11 @@ const Header = ({showCart}) => {
               {/* Add more navigation links as needed */}
             </Nav>
             <Nav>
-              <Button  onClick={showCart}  variant="outline-light">Cart</Button>
-            </Nav>
+          {/* Use CartButton with onCartClick prop */}
+          <Button variant="primary" onClick={onCartClick}>
+       Cart ({cartItems.length})
+      </Button>
+          </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>

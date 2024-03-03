@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { Button } from 'react-bootstrap';
+import { CartContext } from './CartContext';
 
-const CartButton = ({ onClick }) => {
+function CartButton({ onCartClick }) {
+  const { cartItems } = useContext(CartContext);
+  // Receive onCartClick prop
   return (
-    <button onClick={onClick}  style={{ backgroundColor: 'gray', color: 'blue', padding: '10px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-      See the Cart
-    </button>
+    <div>
+      <Button variant="primary" onClick={onCartClick}>
+       Cart 
+      </Button>
+    </div>
   );
 }
 
