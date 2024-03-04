@@ -1,12 +1,15 @@
+// App.js
 import React, { useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import Routes
 import Header from './components/Header';
 import CartButton from './components/CartButton';
 import CartModal from './components/CartModal';
-import Store from './components/Store'; // Import Store component
+import Store from './components/Store';
 import { CartProvider } from './components/CartContext';
 import TitleBar from './components/TitleBar';
 import Footer from './components/Footer';
+import AboutPage from './components/AboutPage';
+
 function App() {
   const [showModal, setShowModal] = useState(false);
 
@@ -15,17 +18,16 @@ function App() {
 
   return (
     <CartProvider>
-      <Header onCartClick={handleShow} /> 
-      <TitleBar />{/* Pass onCartClick handler */}
-      <Container>
-        <div className="text-center">
-          
-          <Store /> {/* Include Store component */}
-          <CartButton onCartClick={handleShow} /> {/* Pass onCartClick handler */}
-        </div>
-      </Container>
-      <CartModal showModal={showModal} handleClose={handleClose} /> {/* Pass showModal and handleClose props */}
-      <Footer/>
+      <Router>
+        <Header onCartClick={handleShow} />
+        <TitleBar />
+        <Routes> {/* Use Routes instead of Switch */}
+          <Route path="/" element={<Store />} />
+          <Route path="/about" element={<AboutPage />} />
+        </Routes>
+      </Router>
+      <CartModal showModal={showModal} handleClose={handleClose} />
+      <Footer />
     </CartProvider>
   );
 }
