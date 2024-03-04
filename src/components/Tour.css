@@ -1,0 +1,29 @@
+.tour-line {
+    border: none;
+    border-bottom: 1px solid #110f0f; /* Change the color and size of the line as needed */
+    margin: 20px 0;
+    width: 100%; /* Adjust the margin as needed */
+    /* Ensure the line spans the full width of the container */
+  }
+
+  .card {
+    max-width: 600px; /* Adjust the max-width of the card as needed */
+    margin: auto; 
+    border: none;/* Center the card horizontally */
+  }
+  
+
+  
+
+  
+  .card-title,
+  .card-text {
+    display: inline-block;
+    margin-right: 20px;
+  }
+  
+  .btn btn-primary {
+    position:absolute;
+    bottom: 0;
+    right: 10px;
+  }

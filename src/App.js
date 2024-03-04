@@ -9,6 +9,7 @@ import { CartProvider } from './components/CartContext';
 import TitleBar from './components/TitleBar';
 import Footer from './components/Footer';
 import AboutPage from './components/AboutPage';
+import HomePage from './components/HomePage';
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -24,8 +25,10 @@ function App() {
         <Routes> {/* Use Routes instead of Switch */}
           <Route path="/" element={<Store />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/home" element={<HomePage/>}/>
         </Routes>
       </Router>
+      <CartButton onCartClick={handleShow} />
       <CartModal showModal={showModal} handleClose={handleClose} />
       <Footer />
     </CartProvider>
