@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MoviesList from './components/MoviesList';
 import './App.css';
 
 function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [retryInterval, setRetryInterval] = useState(null);
+
+  useEffect(() => {
+    if (retryInterval) {
+      const timer = setTimeout(fetchMoviesHandler, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [retryInterval]);
 
   async function fetchMoviesHandler() {
-    setIsLoading(true); // Set isLoading to true when fetching starts
+    setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch('https://swapi.dev/api/films/');
       if (!response.ok) {
@@ -21,24 +31,36 @@ function App() {
         releaseDate: movieData.release_date,
       }));
       setMovies(transformedMovies);
+      setIsLoading(false);
+      setRetryInterval(null); // Reset retry interval upon successful fetch
     } catch (error) {
-      console.error('Error fetching movies:', error);
-    } finally {
-      setIsLoading(false); // Set isLoading to false when fetching is done (whether successful or not)
+      setError('Something went wrong...Retrying');
+      setRetryInterval(true); // Initiate retrying
     }
+  }
+
+  function cancelRetryHandler() {
+    setRetryInterval(null); // Stop retrying
+    setIsLoading(false);
+    setError(null);
   }
 
   return (
     <React.Fragment>
       <section>
-        <button onClick={fetchMoviesHandler}>Fetch Movies</button>
+        <button onClick={fetchMoviesHandler} disabled={isLoading}>
+          {isLoading ? 'Fetching...' : 'Fetch Movies'}
+        </button>
+        {isLoading && <p>Loading...</p>}
+        {error && (
+          <div>
+            <p>{error}</p>
+            <button onClick={cancelRetryHandler}>Cancel Retry</button>
+          </div>
+        )}
       </section>
       <section>
-        {isLoading ? (
-          <div className="loader">Loading...</div> // Show loader if isLoading is true
-        ) : (
-          <MoviesList movies={movies} />
-        )}
+        <MoviesList movies={movies} />
       </section>
     </React.Fragment>
   );
