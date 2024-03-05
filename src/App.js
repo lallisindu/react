@@ -1,21 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import MoviesList from './components/MoviesList';
 import './App.css';
 
 function App() {
   const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [retryInterval, setRetryInterval] = useState(null);
 
-  useEffect(() => {
-    if (retryInterval) {
-      const timer = setTimeout(fetchMoviesHandler, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [retryInterval]);
-
-  async function fetchMoviesHandler() {
+  const fetchMoviesHandler = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -32,35 +24,36 @@ function App() {
       }));
       setMovies(transformedMovies);
       setIsLoading(false);
-      setRetryInterval(null); // Reset retry interval upon successful fetch
     } catch (error) {
       setError('Something went wrong...Retrying');
-      setRetryInterval(true); // Initiate retrying
+      setIsLoading(false);
     }
-  }
+  }, []);
 
-  function cancelRetryHandler() {
-    setRetryInterval(null); // Stop retrying
+  useEffect(() => {
+    fetchMoviesHandler();
+  }, [fetchMoviesHandler]);
+
+  const cancelRetryHandler = useCallback(() => {
     setIsLoading(false);
     setError(null);
-  }
+  }, []);
+
+  const moviesList = useMemo(() => <MoviesList movies={movies} />, [movies]);
 
   return (
     <React.Fragment>
       <section>
-        <button onClick={fetchMoviesHandler} disabled={isLoading}>
-          {isLoading ? 'Fetching...' : 'Fetch Movies'}
-        </button>
-        {isLoading && <p>Loading...</p>}
-        {error && (
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : error ? (
           <div>
             <p>{error}</p>
             <button onClick={cancelRetryHandler}>Cancel Retry</button>
           </div>
+        ) : (
+          moviesList
         )}
-      </section>
-      <section>
-        <MoviesList movies={movies} />
       </section>
     </React.Fragment>
   );
