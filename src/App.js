@@ -1,116 +1,99 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import MoviesList from './components/MoviesList';
+import AddMovie from './components/AddMovie';
 import './App.css';
 
 function App() {
   const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [formData, setFormData] = useState({
-    title: '',
-    openingText: '',
-    releaseDate: '',
-  });
 
   const fetchMoviesHandler = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('https://swapi.dev/api/films/');
+      const response = await fetch('https://react-movie-82b50-default-rtdb.firebaseio.com/movies.json');
       if (!response.ok) {
-        throw new Error('Failed to fetch movies');
+        throw new Error('Something went wrong!');
       }
+
       const data = await response.json();
-      const transformedMovies = data.results.map((movieData) => ({
-        id: movieData.episode_id,
-        title: movieData.title,
-        openingText: movieData.opening_crawl,
-        releaseDate: movieData.release_date,
-      }));
-      setMovies(transformedMovies);
-      setIsLoading(false);
+
+      const loadedMovies = [];
+
+      for (const key in data) {
+        loadedMovies.push({
+          id: key,
+          title: data[key].title,
+          openingText: data[key].openingText,
+          releaseDate: data[key].releaseDate,
+        });
+      }
+
+      setMovies(loadedMovies);
     } catch (error) {
-      setError('Something went wrong...Retrying');
-      setIsLoading(false);
+      setError(error.message);
     }
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
     fetchMoviesHandler();
   }, [fetchMoviesHandler]);
 
-  const cancelRetryHandler = useCallback(() => {
-    setIsLoading(false);
+  async function addMovieHandler(movie) {
+    const response = await fetch('https://react-movie-82b50-default-rtdb.firebaseio.com/movies.json', {
+      method: 'POST',
+      body: JSON.stringify(movie),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    console.log(data);
+  }
+
+  async function deleteMovieHandler(movieId) {
+    setIsLoading(true);
     setError(null);
-  }, []);
+    try {
+      const response = await fetch(`https://react-movie-82b50-default-rtdb.firebaseio.com/${movieId}.json`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete movie');
+      }
+      // Filter out the deleted movie from the movies array
+      setMovies(prevMovies => prevMovies.filter(movie => movie.id !== movieId));
+    } catch (error) {
+      setError(error.message);
+    }
+    setIsLoading(false);
+  }
 
-  const handleInputChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  }, []);
+  let content = <p>Found no movies.</p>;
 
-  const handleAddMovie = useCallback(() => {
-    console.log(formData);
-  }, [formData]);
+  if (movies.length > 0) {
+    content = <MoviesList movies={movies} onDeleteMovie={deleteMovieHandler} />;
+  }
 
-  const moviesList = useMemo(() => <MoviesList movies={movies} />, [movies]);
+  if (error) {
+    content = <p>{error}</p>;
+  }
+
+  if (isLoading) {
+    content = <p>Loading...</p>;
+  }
 
   return (
     <React.Fragment>
-      <section className="add-movie">
-        <form>
-          <div className="form-control">
-            <label htmlFor="title">Title</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="form-control">
-            <label htmlFor="openingText">Opening Text</label>
-            <textarea
-              id="openingText"
-              name="openingText"
-              value={formData.openingText}
-              onChange={handleInputChange}
-            ></textarea>
-          </div>
-          <div className="form-control">
-            <label htmlFor="releaseDate">Release Date</label>
-            <input
-              type="date"
-              id="releaseDate"
-              name="releaseDate"
-              value={formData.releaseDate}
-              onChange={handleInputChange}
-            />
-          </div>
-          <button type="button" onClick={handleAddMovie}>
-            Add Movie
-          </button>
-        </form>
+      <section>
+        <AddMovie onAddMovie={addMovieHandler} />
       </section>
       <section>
-        <button onClick={fetchMoviesHandler} disabled={isLoading}>
-          {isLoading ? 'Fetching...' : 'Fetch Movies'}
-        </button>
-        {isLoading && <p>Loading...</p>}
-        {error && (
-          <div>
-            <p>{error}</p>
-            <button onClick={cancelRetryHandler}>Cancel Retry</button>
-          </div>
-        )}
+        <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
-      <section>
-        {moviesList}
-      </section>
+      <section>{content}</section>
     </React.Fragment>
   );
 }
