@@ -1,6 +1,6 @@
 // App.js
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import Routes
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import CartButton from './components/CartButton';
 import CartModal from './components/CartModal';
@@ -10,6 +10,7 @@ import TitleBar from './components/TitleBar';
 import Footer from './components/Footer';
 import AboutPage from './components/AboutPage';
 import HomePage from './components/HomePage';
+import ContactUs from './components/ContactUs'; // Import ContactUs component
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -22,10 +23,11 @@ function App() {
       <Router>
         <Header onCartClick={handleShow} />
         <TitleBar />
-        <Routes> {/* Use Routes instead of Switch */}
+        <Routes>
           <Route path="/" element={<Store />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/home" element={<HomePage/>}/>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/contact" element={<ContactUs />} /> {/* Route for ContactUs */}
         </Routes>
       </Router>
       <CartButton onCartClick={handleShow} />
