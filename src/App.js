@@ -10,7 +10,9 @@ import TitleBar from './components/TitleBar';
 import Footer from './components/Footer';
 import AboutPage from './components/AboutPage';
 import HomePage from './components/HomePage';
-import ContactUs from './components/ContactUs'; // Import ContactUs component
+import ContactUs from './components/ContactUs';
+import ProductPage from './components/ProductPage';
+import ProductDetails from './components/ProductDetails';
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -27,7 +29,9 @@ function App() {
           <Route path="/" element={<Store />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/home" element={<HomePage />} />
-          <Route path="/contact" element={<ContactUs />} /> {/* Route for ContactUs */}
+          <Route path="/contact" element={<ContactUs />} />
+          <Route path="/products" element={<ProductPage />} exact /> 
+          <Route path="/products/:productId" element={<ProductDetails />} /> {/* Added route for ProductDetails */}
         </Routes>
       </Router>
       <CartButton onCartClick={handleShow} />

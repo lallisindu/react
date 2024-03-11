@@ -17,7 +17,8 @@ function Header({ onCartClick }) {
               <NavLink to="/" className="mx-3"><h6>STORE</h6></NavLink>
               <NavLink to="/home" className="mx-3"><h6>HOME</h6></NavLink>
               <NavLink to="/about" className="mx-3"><h6>ABOUT</h6></NavLink>
-              <NavLink to="/contact" className="mx-3"><h6>CONTACT US</h6></NavLink> {/* New NavLink for Contact Us */}
+              <NavLink to="/contact" className="mx-3"><h6>CONTACT US</h6></NavLink>
+              <NavLink to="/products" className="mx-3"><h6>Products</h6></NavLink> {/* New NavLink for Contact Us */}
             </Nav>
             <Nav>
               <Button variant="primary" onClick={onCartClick}>

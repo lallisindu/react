@@ -3,7 +3,7 @@ import utubeImage from '../images/utube.jpeg'; // Import the YouTube icon image
 
 const Footer = () => {
   return (
-    <footer style={{ backgroundColor: 'skyblue', padding: '5px 0', color: 'white', position: 'fixed', bottom: '0', width: '100%', zIndex: '999' }}>
+    <footer style={{ backgroundColor: 'skyblue', padding: '3px 0', color: 'white', position: 'fixed', bottom: '0', width: '100%', zIndex: '999' }}>
       <div className="footer-title" style={{ marginLeft: '300px' }}>
         <h1>The Generics</h1>
       </div>
