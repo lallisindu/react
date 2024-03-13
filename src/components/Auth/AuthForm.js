@@ -18,9 +18,12 @@ const AuthForm = () => {
 
     setIsLoading(true)
     if (isLogin){
+      url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCYf3MKqCYUCbsLTl4floHfWXtKWcPi6D8'
 
     }else {
-      fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyCYf3MKqCYUCbsLTl4floHfWXtKWcPi6D8',
+      url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyCYf3MKqCYUCbsLTl4floHfWXtKWcPi6D8'
+    }
+     fetch( url,
       
       {
         method: 'POST',
@@ -36,7 +39,7 @@ const AuthForm = () => {
       ).then ((res) => {
         setIsLoading(false)
         if (res.ok){
-
+          return res.json();
         } else {
           return res.json().then ((data) => {
             console.log(data)
@@ -44,9 +47,15 @@ const AuthForm = () => {
             if(data && data.error && data.error.message ){
               errorMessage=data.error.message;
             }
-            alert(errorMessage);
+          
+            throw new Error(errorMessage);
           })
         }
+      }).then ((data) => {
+        console.log(data)
+      })
+      .catch((err) => {
+        alert(err.message)
       });
     }
   }
@@ -82,6 +91,6 @@ const AuthForm = () => {
       </form>
     </section>
   );
-};
+
 
 export default AuthForm;
