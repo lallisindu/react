@@ -1,4 +1,3 @@
-// Header.js
 import React, { useContext } from 'react';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { CartContext } from './CartContext';
@@ -17,10 +16,14 @@ function Header({ onCartClick }) {
               <NavLink to="/" className="mx-3"><h6>STORE</h6></NavLink>
               <NavLink to="/home" className="mx-3"><h6>HOME</h6></NavLink>
               <NavLink to="/about" className="mx-3"><h6>ABOUT</h6></NavLink>
+               {/* Added NavLink for LOGIN */}
               <NavLink to="/contact" className="mx-3"><h6>CONTACT US</h6></NavLink>
-              <NavLink to="/products" className="mx-3"><h6>Products</h6></NavLink> {/* New NavLink for Contact Us */}
+              <NavLink to="/products" className="mx-3"><h6>Products</h6></NavLink>
+              <NavLink to="/login" className="mx-4 justify-content-between" ><h6>LOGIN</h6></NavLink>
+              
             </Nav>
             <Nav>
+            
               <Button variant="primary" onClick={onCartClick}>
                 Cart ({cartItems.length})
               </Button>
