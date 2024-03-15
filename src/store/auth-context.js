@@ -1,30 +1,56 @@
-import React, {useState} from "react";
+// auth-context.js
+import { createContext, useState, useEffect } from 'react';
 
-const AuthContext=React.createContext({
-    token: '',
-    isLoggedIn: false,
-    login: (token) => {},
-    logout: () => {},
+const AuthContext = createContext({
+  isLoggedIn: false,
+  login: (token) => {},
+  logout: () => {}
 });
 
 export const AuthContextProvider = (props) => {
-    const initialToken =localStorage.getItem('token');
-    const [token, setToken]=useState(initialToken)
-    const userIsLoggedIn =!!token;
-    const loginHandler=(token) => {
-        setToken(token);
-        localStorage.setItem('token', token)
-    }
-    const logoutHandle = () => {
-        setToken(null)
-    }
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [tokenExpirationTimer, setTokenExpirationTimer] = useState(null);
 
-    const contextValue= {
-        token: token,
-        isLoogedIn: userIsLoggedIn,
-        login: loginHandler,
-        logout:logoutHandle,
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      const expirationTime = localStorage.getItem('expirationTime');
+      const remainingTime = expirationTime - Date.now();
+      if (remainingTime > 0) {
+        loginHandler(storedToken, remainingTime);
+      } else {
+        logoutHandler(); // Token expired
+      }
     }
-    return <AuthContext.Provider value={contextValue}>{props.children}</AuthContext.Provider>
+  }, []);
+
+  const loginHandler = (token, expiresIn) => {
+    setIsLoggedIn(true);
+    localStorage.setItem('token', token);
+    localStorage.setItem('expirationTime', Date.now() + expiresIn);
+    setTokenExpirationTimer(setTimeout(logoutHandler, expiresIn));
+  };
+
+  const logoutHandler = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem('token');
+    localStorage.removeItem('expirationTime');
+    if (tokenExpirationTimer) {
+      clearTimeout(tokenExpirationTimer);
+    }
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        isLoggedIn: isLoggedIn,
+        login: loginHandler,
+        logout: logoutHandler
+      }}
+    >
+      {props.children}
+    </AuthContext.Provider>
+  );
 };
+
 export default AuthContext;
