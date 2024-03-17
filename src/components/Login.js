@@ -27,7 +27,7 @@ const Login = () => {
         // Handle successful authentication
         console.log('Authenticated user with idToken:', idToken);
         const storedToken = localStorage.getItem(`token_${email}`);
-  
+        
         // Redirect to products page
         navigate('/');
     } else {
@@ -37,16 +37,20 @@ const Login = () => {
         // Handle authentication failure
         if (error.code === 'auth/email-already-in-use') {
           // If email is already in use, redirect without showing error message
-          navigate('/'); // Change 'another-page' to your desired URL
+          navigate('/products'); // Change 'another-page' to your desired URL
         } else if (error.code === 'auth/wrong-password') {
           // If wrong password, display error message
           setError('Incorrect email or password. Please try again.');
         } else {
           // Handle other authentication errors without showing message
           console.error('Authentication error:', error.message); // Log the error for debugging
-          alert('Authentication failed. Please try again.'); // Generic message to the user
+          alert('Please provide Login details.'); // Generic message to the user
         }
       }
+    };
+    const clearFields = () => {
+      setEmail('');
+      setPassword('');
     };
       
   return (
@@ -60,7 +64,7 @@ const Login = () => {
             ref={emailInputRef}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
+            
           />
         </div>
         <div>
@@ -70,7 +74,7 @@ const Login = () => {
             ref={passwordInputRef}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
+          
             autoComplete="current-password"
           />
         </div>
