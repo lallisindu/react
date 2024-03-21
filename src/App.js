@@ -1,24 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React, { useState } from 'react';
+import AddProductForm from './components/AddProductForm';
+import ProductList from './components/ProductList';
+import Header from './components/Header';
+import { CartProvider } from './components/CartContext';
+import CartModal from './components/CartModal';
 
 function App() {
+  const [products, setProducts] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleAddProduct = (newProduct) => {
+    setProducts([...products, newProduct]);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <CartProvider>
+      <Header handleOpenModal={handleOpenModal} />
+      <AddProductForm onAdd={handleAddProduct} />
+      <ProductList products={products} />
+      <CartModal showModal={showModal} handleClose={handleCloseModal} />
+    </CartProvider>
   );
 }
 
