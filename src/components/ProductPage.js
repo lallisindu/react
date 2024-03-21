@@ -12,17 +12,18 @@ const ProductPage = () => {
                     >
                         Album 1
                     </Link>
+                    
                 </li>
                 <li>
                     <Link
-                        to="/products/p2?imageUrl=URL_FOR_ALBUM_2"
+                        to="/products/p2?imageUrl=https://prasadyash2411.github.io/ecom-website/img/Album%202.png"
                     >
                         Album 2
                     </Link>
                 </li>
                 <li>
                     <Link
-                        to="/products/p3?imageUrl=URL_FOR_ALBUM_3"
+                        to="/products/p3?imageUrl=https://prasadyash2411.github.io/ecom-website/img/Album%203.png"
                     >
                         Album 3
                     </Link>

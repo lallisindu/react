@@ -10,7 +10,7 @@ export const doCreateUserWithEmailAndPassword = async (email, password) => {
         
         // Get the ID token from the user
         const idToken = await user.getIdToken();
-        console.log(idToken, "Idtoken");
+        console.log(idToken, "createUserWithEmailAndPassword Idtoken");
 
         // Return the ID token
         return idToken;
@@ -27,13 +27,14 @@ export const doCreateUserWithEmailAndPassword = async (email, password) => {
       
       // Get the ID token from the user
       const idToken = await user.getIdToken();
-      console.log(idToken, "Idtoken");
+      console.log(idToken, "SignInWithEmailAndPassword Idtoken");
   
       // Return the ID token
       return idToken;
     } catch (error) {
-      // Handle errors if sign-in fails
-      throw error;
+      console.error('Error creating user:', error);
+    throw error;
+    
     }
   };
   

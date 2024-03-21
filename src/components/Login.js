@@ -1,61 +1,68 @@
 import React, { useState, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../store/auth-context';
-import { doCreateUserWithEmailAndPassword, signInWithEmailAndPassword } from '../firebase/auth';
+import { doCreateUserWithEmailAndPassword, doSignInWithEmailAndPassword } from '../firebase/auth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null); 
+  const [isSignup, setIsSignup] = useState(false); // State to track signup mode
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSignup = async () => {
     try {
-      // Call the asynchronous function and wait for the result
       const idToken = await doCreateUserWithEmailAndPassword(email, password);
-
-      // Ensure idToken is not undefined before proceeding
       if (idToken) {
-        // Store the user's email in local storage
-        localStorage.setItem(`token_${email}`, idToken);
-  
-        // Handle successful authentication
+        localStorage.setItem(`${email}`, idToken);
+        authCtx.setUserEmail(email);
         console.log('Authenticated user with idToken:', idToken);
-        const storedToken = localStorage.getItem(`token_${email}`);
-        
-        // Redirect to products page
-        navigate('/');
-    } else {
+        navigate('/products');
+      } else {
         console.error('ID token is undefined.');
       }
     } catch (error) {
-        // Handle authentication failure
-        if (error.code === 'auth/email-already-in-use') {
-          // If email is already in use, redirect without showing error message
-          navigate('/products'); // Change 'another-page' to your desired URL
-        } else if (error.code === 'auth/wrong-password') {
-          // If wrong password, display error message
-          setError('Incorrect email or password. Please try again.');
-        } else {
-          // Handle other authentication errors without showing message
-          console.error('Authentication error:', error.message); // Log the error for debugging
-          alert('Please provide Login details.'); // Generic message to the user
-        }
+      console.error('Signup error:', error.message);
+      setError(error.message);
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      const idToken = await doSignInWithEmailAndPassword(email, password);
+      if (idToken) {
+        localStorage.setItem(`${email}`, idToken);
+        authCtx.setUserEmail(email);
+        console.log('Authenticated user with idToken:', idToken);
+        navigate('/products');
+      } else {
+        console.error('ID token is undefined.');
       }
-    };
-    const clearFields = () => {
-      setEmail('');
-      setPassword('');
-    };
-      
+    } catch (error) {
+      console.error('Login error:', error.message);
+      setError(error.message);
+      // If the error is related to non-existing email, switch to signup mode
+      if (error.code === 'auth/user-not-found') {
+        setIsSignup(true);
+      }
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isSignup) {
+      handleSignup();
+    } else {
+      handleLogin();
+    }
+  };
+
   return (
     <div>
-      <h2>Login</h2>
+      <h2>{isSignup ? 'Sign Up' : 'Login'}</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email:</label>
@@ -64,7 +71,6 @@ const Login = () => {
             ref={emailInputRef}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            
           />
         </div>
         <div>
@@ -74,13 +80,18 @@ const Login = () => {
             ref={passwordInputRef}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          
             autoComplete="current-password"
           />
         </div>
-        {error && <div style={{ color: 'red' }}>{error}</div>} {/* Display error message if exists */}
-        <button type="submit">Login</button>
+        {error && <div style={{ color: 'red' }}>{error}</div>}
+        <button type="submit">{isSignup ? 'Sign Up' : 'Login'}</button>
       </form>
+      {!isSignup && (
+        <p>
+          Don't have an account?{' '}
+          <button onClick={() => setIsSignup(true)}>Sign Up</button>
+        </p>
+      )}
     </div>
   );
 };

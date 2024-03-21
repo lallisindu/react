@@ -1,10 +1,12 @@
 import React, { useState, createContext } from 'react';
 
+
+
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
-
+  
   // Function to calculate the total cost of all items in the cart
   const calculateTotalCost = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -23,6 +25,7 @@ export const CartProvider = ({ children }) => {
       setCartItems([...cartItems, { ...item, quantity: 1 }]);
     }
   };
+  
 
   const removeItemFromCart = (index) => {
     const updatedCart = [...cartItems];
@@ -38,7 +41,7 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, addItemToCart, removeItemFromCart, updateItemQuantity, calculateTotalCost }}>
+    <CartContext.Provider value={{ cartItems, setCartItems, addItemToCart, removeItemFromCart, updateItemQuantity, calculateTotalCost,  }}>
       {children}
     </CartContext.Provider>
   );

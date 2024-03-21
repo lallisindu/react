@@ -1,15 +1,19 @@
-// auth-context.js
-import { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
-const AuthContext = createContext({
+export const AuthContext = createContext({
   isLoggedIn: false,
   login: (token) => {},
-  logout: () => {}
+  logout: () => {},
+  
+  userEmail: '',
+  setUserEmail: (email) => {} // Add userEmail property
 });
 
 export const AuthContextProvider = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [tokenExpirationTimer, setTokenExpirationTimer] = useState(null);
+  const [userEmail, setUserEmail] = useState(''); // State to store user's email
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -39,13 +43,25 @@ export const AuthContextProvider = (props) => {
       clearTimeout(tokenExpirationTimer);
     }
   };
+  const storeCartData = async (cartData) => {
+    try {
+      await axios.post(`https://crudcrud.com/api/364938e6773e4f74a5b861e088649679/cart/${userEmail}`, {
+        cartItems: cartData
+      });
+      console.log('Cart data stored successfully.');
+    } catch (error) {
+      console.error('Error storing cart data:', error);
+    }
+  };
 
   return (
     <AuthContext.Provider
       value={{
         isLoggedIn: isLoggedIn,
         login: loginHandler,
-        logout: logoutHandler
+        logout: logoutHandler,
+        userEmail: userEmail, // Provide userEmail value
+        setUserEmail: setUserEmail // Provide setUserEmail function
       }}
     >
       {props.children}
