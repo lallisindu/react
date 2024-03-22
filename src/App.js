@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React, { useState } from 'react';
+import Search from './components/Search';
+import AddNoteModal from './components/AddNoteModal';
+import NoteList from './components/NoteList';
+import { NoteProvider } from './components/NoteContext';
 
-function App() {
+const App = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [noteToEdit, setNoteToEdit] = useState(null);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleAddNote = () => {
+    setNoteToEdit(null);
+    setShowModal(true);
+  };
+
+  const handleEditNote = (note) => {
+    setNoteToEdit(note);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <NoteProvider>
+      <div>
+        <Search handleSearch={handleSearch} />
+        <button onClick={handleAddNote}>Add Notes</button>
+        <NoteList searchTerm={searchTerm} handleEditNote={handleEditNote} />
+        {showModal && <AddNoteModal handleClose={handleCloseModal} noteToEdit={noteToEdit} />}
+      </div>
+    </NoteProvider>
   );
-}
+};
 
 export default App;
